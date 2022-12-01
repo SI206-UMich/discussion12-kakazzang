@@ -48,7 +48,33 @@ def problematic_salary(cur, conn):
 
 # TASK 4: VISUALIZATION
 def visualization_salary_data(cur, conn):
-    pass
+    cur.execute("SELECT jobs.job_title FROM jobs JOIN employees ON jobs.job_id = employees.job_id")
+    jobs = cur.fetchall()
+    jobs = [item[0] for item in jobs]
+    cur.execute("SELECT employees.salary FROM employees JOIN jobs ON jobs.job_id = employees.job_id")
+    salary = cur.fetchall()
+    salary = [item[0] for item in salary]
+    # print(jobs)
+    # print(len(jobs))
+    # print(salary)
+    # print(len(salary))
+    plt.scatter(jobs,salary)
+
+    cur.execute('SELECT job_title FROM jobs')
+    job_titles = cur.fetchall()
+    job_titles = [item[0] for item in job_titles]
+    # print(job_titles)
+    cur.execute('SELECT min_salary FROM jobs')
+    min = cur.fetchall()
+    min = [item[0] for item in min]
+    # print(min)
+    plt.scatter(job_titles,min,marker="x",color="red")
+    cur.execute('SELECT max_salary FROM jobs')
+    max = cur.fetchall()
+    max = [item[0] for item in max]
+    # print(max)
+    plt.scatter(job_titles,max,marker="x",color='red')
+    plt.show()
 
 class TestDiscussion12(unittest.TestCase):
     def setUp(self) -> None:
@@ -82,7 +108,9 @@ def main():
     job_and_hire_date(cur, conn)
 
     wrong_salary = (problematic_salary(cur, conn))
-    print(wrong_salary)
+    # print(wrong_salary)
+
+    visualization_salary_data(cur, conn)
 
 if __name__ == "__main__":
     main()
